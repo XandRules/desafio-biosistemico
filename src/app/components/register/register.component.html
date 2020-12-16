@@ -1,0 +1,47 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Cadastrar</mat-card-title>
+    </mat-card-header>
+
+    <form class="example-form">
+
+      <mat-card-content>
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Nome de usuário" [formControl]="nameFormControl" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Nome é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Email" [formControl]="emailFormControl" [errorStateMatcher]="matcher">
+
+          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Entre com um e-mail válido.
+          </mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email é <strong>obrigatório</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Senha" [formControl]="passwordFormControl" [errorStateMatcher]="matcher">
+
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Escolha um perfil...</mat-label>
+          <mat-select>
+            <mat-option [value]="roles" *ngFor="let roles of Roles">{{roles}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </mat-card-content>
+
+      <button mat-stroked-button color="primary" class="btn-block">Cadastrar</button>
+
+    </form>
+  </mat-card>
+</div>
