@@ -1,3 +1,3 @@
-export class ResponseLogin{
-    public jwt!: string;
+export class ResponseLogin {
+    public jwt: string = '';
 }

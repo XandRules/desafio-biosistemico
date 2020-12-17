@@ -20,21 +20,21 @@ class SessionController {
     });
 
     if (!user) {
-      return res.json({
-        error: 'user not found'
+      return res.status(500).json({
+        message: 'Usuário não encontrado.'
       });
     }
 
     if (!(await user.checkPassword(password))) {
-      return res.json({
-        error: 'Password does not match'
+      return res.status(500).json({
+        message: 'Senha não confere.'
       });
     }
 
     return res.json({
       jwt: jwt.sign({
-        id,
-        email
+        id: user.id,
+        username
       }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       }),
