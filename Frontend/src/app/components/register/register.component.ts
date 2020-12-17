@@ -28,6 +28,10 @@ export class RegisterComponent implements OnInit {
     Validators.required,
   ]);
 
+  passwordFormControl = new FormControl('', [
+    Validators.required,
+  ]);
+
   matcher = new MyErrorStateMatcher();
 
   Roles: any = ['Administrador', 'Produtor', 'Técnico'];

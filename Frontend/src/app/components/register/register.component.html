@@ -4,7 +4,7 @@
       <mat-card-title>Cadastrar</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form">
+    <form class="form-data">
 
       <mat-card-content>
         <mat-form-field class="full-width">
@@ -27,7 +27,9 @@
 
         <mat-form-field class="full-width">
           <input matInput placeholder="Senha" [formControl]="passwordFormControl" [errorStateMatcher]="matcher">
-
+          <mat-error *ngIf="emailFormControl.hasError('required')">
+            Password é <strong>obrigatório</strong>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="full-width">
