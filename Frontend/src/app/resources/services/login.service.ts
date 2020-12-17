@@ -19,6 +19,9 @@ export class LoginService {
   public doLoginService(requestLogin: RequestLogin): Observable<ResponseLogin> {
     return this.httpClient.post<ResponseLogin>
       ('http://localhost:3333/login', requestLogin)
-      .pipe(tap(token => this.authService.loginResponse = token));
+      .pipe(tap(token => {
+        localStorage.setItem('access_token', token.jwt);
+        this.authService.loginResponse = token;
+      }));
   }
 }

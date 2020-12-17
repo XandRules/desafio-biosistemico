@@ -26,7 +26,6 @@ export class LogInComponent implements OnInit {
 
   public doLogin(): void {
     this.loginService.doLoginService(this.requestLogin).subscribe((data) => {
-
       this.router.navigate(['dashboard']);
     },
       error => {
