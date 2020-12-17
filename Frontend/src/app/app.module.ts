@@ -2,13 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 /* Routing */
 import { AppRoutingModule } from './app-routing.module';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppComponent } from './app.component';
 
 /* Angular Material */
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './angular-material.module';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 /* FormsModule */
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,6 +32,7 @@ import { LogInComponent } from './components/log-in/log-in.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
+    MatSelectModule,
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
@@ -38,7 +40,7 @@ import { LogInComponent } from './components/log-in/log-in.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 
 export class AppModule { }

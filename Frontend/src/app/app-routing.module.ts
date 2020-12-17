@@ -8,8 +8,8 @@ const routes: Routes = [
   { path: 'login', component: LogInComponent },
   {
     path: 'register', canActivate: [AuthGuardService],
-    loadChildren: () => import('./components/register/register.module')
-      .then((m) => m.RegisterModule)
+    loadChildren: () => import('./components/register-modules/register-user/register-user.module')
+      .then((m) => m.RegisterUserModule)
   },
   {
     path: 'dashboard',
