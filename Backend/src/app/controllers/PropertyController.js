@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 
 import Property from '../models/Property';
+import People from '../models/People'
 
 class PropertyController {
   async store(req, res) {
@@ -22,17 +23,28 @@ class PropertyController {
       },
     });
 
-    if (PropertyExists) {
-      return res.status(500).json({
-        message: 'Property already exists.'
-      });
+    const people = await People.findOne({
+      where:{
+        cpf: req.body.cpf
+      }
+    });
+
+    if(!people){
+      return res.status(500).json('CPF não cadastrado');
+    }
+
+    if(people.role !== 'Proprietário'){
+      return res.status(500).json({message: 'Propriedade deve ser vinculada a proprietário'});
     }
 
     let newProperty = null;
 
     try {
       console.log(req.body);
-      newProperty = await Property.create(req.body);
+      newProperty = await Property.create({
+        name: req.body.name,
+        people_id: people.id
+      });
     } catch (error) {
       return res.status(500).json({
         message: error.name

@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 
 import User from '../models/User';
+import People from '../models/People'
 
 class UserController {
   async store(req, res) {
@@ -12,7 +13,7 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.json('Validation fail');
+      return res.status(500).json({message: 'Validation fail'});
     }
 
     const UserExists = await User.findOne({
@@ -22,12 +23,22 @@ class UserController {
     });
 
     if (UserExists) {
-      return res.json({
-        error: 'User already exists.'
+      return res.status(500).json({
+        message: 'Usuário já existe.'
       });
     }
 
     let newUser = null;
+
+    const people = await People.findOne({
+      where:{
+        cpf: req.body.cpf
+      }
+    });
+
+    if(!people){
+      return res.status(500).json('CPF não cadastrado');
+    }
 
     try {
       console.log(req.body);
