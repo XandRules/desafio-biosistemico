@@ -25,4 +25,8 @@ export class AuthService {
     return localStorage.getItem('role')!;
   }
 
+  public get token() : string{
+    return localStorage.getItem('access_token')!;
+  }
+
 }

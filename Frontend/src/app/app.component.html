@@ -1,8 +1,18 @@
 <!-- Toolbar -->
 <mat-toolbar color="primary" class="app-header">
   <div><a routerLink="/" class="positronx">Fazenda</a></div>
+
   <span class="nav-tool-items">
-    <a mat-button routerLink="login" routerLinkActive="active">Entrar</a>
+    <button mat-button [matMenuTriggerFor]="menu" *ngIf="(loggedUser)">
+      Novo
+    </button>
+      <mat-menu #menu="matMenu">
+        <button routerLink="/register-user" mat-menu-item>Usuário</button>
+        <button routerLink="/register" mat-menu-item>Pessoa</button>
+        <button routerLink="/register-property" mat-menu-item>Propriedade</button>
+      </mat-menu>
+    <a *ngIf="(!loggedUser)" mat-button routerLink="login" routerLinkActive="active">Entrar</a>
+    <a *ngIf="(loggedUser)" mat-button routerLink="login" routerLinkActive="active" (click)="sair()">Sair</a>
   </span>
 </mat-toolbar>
 

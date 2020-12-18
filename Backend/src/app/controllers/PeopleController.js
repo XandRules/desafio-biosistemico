@@ -13,7 +13,7 @@ class PeopleController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.json('Validation fail');
+      return res.status(500).json('Validation fail');
     }
 
     const PeopleExists = await People.findOne({
@@ -23,7 +23,7 @@ class PeopleController {
     });
 
     if (PeopleExists) {
-      return res.json({
+      return res.status(500).json({
         error: 'People already exists.'
       });
     }

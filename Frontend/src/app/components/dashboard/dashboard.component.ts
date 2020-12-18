@@ -8,6 +8,7 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/resources/services/auth.service';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,11 +24,14 @@ export class DashboardComponent implements OnInit{
     @Inject(PLATFORM_ID) private platformId, 
     private zone: NgZone,
     private httpClient: HttpClient,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private app: AppComponent) { }
 
 
   ngOnInit(): void {
-    console.log('Dashboard')   
+    console.log('Dashboard') 
+    
+    this.app.load();
 
     console.log(this.authService.role);
 

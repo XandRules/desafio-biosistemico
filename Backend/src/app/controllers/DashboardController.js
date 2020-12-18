@@ -26,10 +26,13 @@ class DashboardController {
       }
     });
 
+    const peopleCount = await People.count();
+
     const property = await Property.count();
 
     return res.json([
       {"Perfil": 'Número de Usuários', "Total" : userTotal},
+      {"Perfil": 'Número de Pessoas', "Total" : peopleCount},
       {"Perfil": 'Administradores', "Total" : peopleAdmin},
       {"Perfil": 'Proprietários', "Total" : peopleOwer},
       {"Perfil": 'Técnicos', "Total" : peopleTech},

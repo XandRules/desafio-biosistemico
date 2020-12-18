@@ -1,5 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { RegisterPeople } from 'src/app/resources/models/RegisterPeople';
+import { AlertService } from 'src/app/resources/services/alert.service';
+import { AuthService } from 'src/app/resources/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -11,13 +14,30 @@ export class RegisterComponent implements OnInit {
 
   Roles: any = ['Administrador', 'Técnico', 'Proprietário'];
 
-  constructor(private httpClient: HttpClient) { }
+  registerPeople: any;
+  token: any;
+
+  constructor(private httpClient: HttpClient,
+    private alertService: AlertService,
+    private authService: AuthService) { }
 
   ngOnInit() {
 
-    this.httpClient.get('http://localhost:3333/register').subscribe((data)=> {
+    this.registerPeople = new RegisterPeople();
+    this.token = this.authService.token;
+  }
+
+
+  public registerNewPeople(): void{
+    this.httpClient.post("http://localhost:3333/people",
+    this.registerPeople).subscribe(data =>{
       console.log(data);
-    });
+      this.alertService.success('Cadastro Realizado!', 'Cadastro realizado com sucesso');
+    },
+    error => {
+      this.alertService.error('Oops!', error.error.message);
+    }
+    );
   }
 
 }
