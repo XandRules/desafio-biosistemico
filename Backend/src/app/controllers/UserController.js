@@ -2,13 +2,14 @@ import * as Yup from 'yup';
 
 import User from '../models/User';
 import bcrypt from 'bcryptjs';
+import People from '../models/People';
 
 class UserController {
   async store(req, res) {
     const schema = Yup.object().shape({
       login: Yup.string().required(),     
-      password_hash: Yup.string().required(), 
-      people_id: Yup.number().required(),
+      password: Yup.string().required(), 
+      cpf: Yup.number().required(),
 
     });
 
@@ -28,12 +29,26 @@ class UserController {
       });
     }
 
+    const people = await People.findOne({
+      where:{
+        cpf: req.body.cpf
+      }
+    });
+
+    if(!people){
+      return res.status(500).json('CPF não cadastrado');
+    }
+
     let newUser = null;
 
     try {
       console.log(req.body);
-      req.body.password_hash =  await bcrypt.hash(req.body.password_hash, 8);
-      newUser = await User.create(req.body);
+      const password_hash =  await bcrypt.hash(req.body.password, 8);
+      newUser = await User.create({
+        login: req.body.login,
+        password_hash: password_hash,
+        people_id: people.id
+      });
     } catch (error) {
       return res.json({
         error: error.name

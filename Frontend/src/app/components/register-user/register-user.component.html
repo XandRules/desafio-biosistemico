@@ -8,21 +8,24 @@
 
       <mat-card-content>
         <mat-form-field class="example-full-width">
-          <input type="text" matInput placeholder="CPF do Usuário">
+          <input type="text" matInput placeholder="CPF do Usuário"
+          [(ngModel)]="registerUser.cpf" name="cpf">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input type="text" matInput placeholder="Nome de Usuário">
+          <input type="text" matInput placeholder="Nome de Usuário"
+          [(ngModel)]="registerUser.login" name="login">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input type="password" matInput placeholder="Senha">
+          <input type="password" matInput placeholder="Senha"
+          [(ngModel)]="registerUser.password" name="password">
         </mat-form-field>
 
       </mat-card-content>
 
-      <button mat-stroked-button color="primary" class="btn-block">Cadastrar</button>
-
+      <button mat-stroked-button color="primary" class="btn-block"
+      (click)="registerNewUser()">Cadastrar</button>
     </form>
   </mat-card>
 </div>

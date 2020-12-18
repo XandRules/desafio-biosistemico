@@ -1,5 +1,5 @@
-export class RequestLogin{
-    public login: string = '';
+export class RequestLogin {
+    public username: string = '';
     public password: string = '';
 
 }

@@ -1,5 +1,5 @@
-export class RegisterUser{
-    public username: string = '';
+export class RegisterUser {
+    public login: string = '';
     public password: string = '';
     public cpf: string = '';
 }

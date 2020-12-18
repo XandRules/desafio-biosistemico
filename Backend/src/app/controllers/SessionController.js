@@ -11,6 +11,8 @@ class SessionController {
       password
     } = req.body;
 
+    console.log(req.body);
+
     console.log("req.body", username)
 
     const user = await User.findOne({
@@ -19,13 +21,15 @@ class SessionController {
       }
     });
 
+    console.log(user);
+
     if (!user) {
       return res.status(500).json({
         message: 'Usuário não encontrado'
       });
     }
 
-    if (!(await user.checkPassword(password))) {
+    if (!(await user.checkPassword(req.body.password))) {
       return res.status(500).json({
         message: 'Senha não confere'
       });
@@ -38,7 +42,7 @@ class SessionController {
         attributes : ['role'],
       }],
       where:{
-        id: user.people_id
+       people_id: user.people_id
       } 
     });
     
