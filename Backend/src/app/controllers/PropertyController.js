@@ -62,6 +62,71 @@ class PropertyController {
     return res.json(property);
   }
 
+  async update(req, res) {
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string(),
+        people_id: Yup.string(),
+      });
+
+      await schema.validate(req.body, {
+        abortEarly: false,
+      });
+      
+      const property = await Property.findByPk(req.params.id);
+
+      if (!property) {
+        return res.status(500).json({
+          error: 'Propriedade não encontrada'
+        });
+      }
+
+
+      const propertyUpdated = await property.update(
+        req.body
+      );
+
+      return res.json(propertyUpdated);
+
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        console.log(error);
+        return res.json({
+          "error": error
+        });
+      }
+    }
+
+  }
+
+  async delete(req, res) {
+
+    try {
+      const property = await Property.findByPk(req.params.id);
+
+      if (!property) {
+        return res.status(500).json({
+          error: 'Usuário não encontrado'
+        });
+      }
+
+
+      const response = await Property.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      return res.json(response);
+
+    } catch (error) {
+      return res.json({
+        error: error
+      });
+    }
+
+  }
+
 }
 
 export default new PropertyController();

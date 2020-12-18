@@ -15,6 +15,7 @@ const routes = new Router();
 
 routes.post("/login", SessionController.store);
 
+//Para usar a rota privada ativar o middleware de autenticação e enviar o jwt
 //routes.use(authMiddleware);
 
 // PRIVATE ROUTES
@@ -26,5 +27,13 @@ routes.get("/people", PeopleController.index);
 routes.get("/property", PropertyController.index);
 routes.get("/user", UserController.index);
 routes.get("/dashboard", DashboardController.index);
+
+routes.put('/people/:id',PeopleController.update);
+routes.put('/property/:id',PropertyController.update);
+routes.put('/user/:id',UserController.update);
+
+routes.delete('/people/:id',PeopleController.delete);
+routes.delete('/property/:id',PropertyController.delete);
+routes.delete('/user/:id',UserController.delete);
 
 export default routes;

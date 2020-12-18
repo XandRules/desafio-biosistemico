@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
 import User from '../models/User';
-import People from '../models/People'
+import bcrypt from 'bcryptjs';
 
 class UserController {
   async store(req, res) {
@@ -30,18 +30,9 @@ class UserController {
 
     let newUser = null;
 
-    const people = await People.findOne({
-      where:{
-        cpf: req.body.cpf
-      }
-    });
-
-    if(!people){
-      return res.status(500).json('CPF não cadastrado');
-    }
-
     try {
       console.log(req.body);
+      req.body.password_hash =  await bcrypt.hash(req.body.password_hash, 8);
       newUser = await User.create(req.body);
     } catch (error) {
       return res.json({
@@ -58,6 +49,88 @@ class UserController {
     const user = await User.findAll();
 
     return res.json(user);
+  }
+
+  async update(req, res) {
+    try {
+      const schema = Yup.object().shape({
+        login: Yup.string(),
+        oldPassword: Yup.string(),
+        password: Yup.string()
+          .when('oldPassword', (oldPassword, field) =>
+            oldPassword ? field.required() : field
+          ),
+        confirmPassword: Yup.string().when('password', (password, field) =>
+          password ? field.required().oneOf([Yup.ref('password')]) : field
+        ),
+      });
+
+      await schema.validate(req.body, {
+        abortEarly: false,
+      });
+
+      const {
+        oldPassword
+      } = req.body;
+
+      
+      const user = await User.findByPk(req.params.id);
+
+      if (!user) {
+        return res.status(500).json({
+          message: 'Usuário não encontrado'
+        });
+      }
+
+      if (oldPassword && !(await user.checkPassword(oldPassword))) {
+        return res.status(401).json({
+          message: 'Senha não confere'
+        });
+      }
+
+      const userUpdated = await user.update(
+        req.body
+      );
+
+      return res.json(userUpdated);
+
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        console.log(error);
+        return res.json({
+          "message": error
+        });
+      }
+    }
+
+  }
+
+  async delete(req, res) {
+
+    try {
+      const user = await User.findByPk(req.params.id);
+
+      if (!user) {
+        return res.status(500).json({
+          error: 'Usuário não encontrado'
+        });
+      }
+
+
+      const response = await User.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      return res.json(response);
+
+    } catch (error) {
+      return res.json({
+        error: error
+      });
+    }
+
   }
 
 }

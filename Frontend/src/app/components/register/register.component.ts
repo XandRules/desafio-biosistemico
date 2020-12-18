@@ -28,16 +28,18 @@ export class RegisterComponent implements OnInit {
   }
 
 
-  public registerNewPeople(): void{
+  public registerNewPeople(): void {
     this.httpClient.post("http://localhost:3333/people",
-    this.registerPeople).subscribe(data =>{
-      console.log(data);
-      this.alertService.success('Cadastro Realizado!', 'Cadastro realizado com sucesso');
-    },
-    error => {
-      this.alertService.error('Oops!', error.error.message);
-    }
-    );
+      this.registerPeople).subscribe(data => {
+        console.log(data);
+        this.registerPeople = null;
+        console.log(this.registerPeople);
+        this.alertService.success('Cadastro Realizado!', 'Cadastro realizado com sucesso');
+      },
+        error => {
+          this.alertService.error('Oops!', error.error.message);
+        }
+      );
   }
 
 }
