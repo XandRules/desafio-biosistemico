@@ -21,6 +21,9 @@ export class LoginService {
       ('http://localhost:3333/login', requestLogin)
       .pipe(tap(token => {
         localStorage.setItem('access_token', token.jwt);
+        localStorage.setItem('role', token.role);
+        console.log('token',token);
+
         this.authService.loginResponse = token;
       }));
   }

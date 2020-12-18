@@ -10,6 +10,7 @@ module.exports = {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique:true,
       },
       password_hash: {
         type: Sequelize.STRING,
@@ -21,6 +22,7 @@ module.exports = {
           model: 'People',
           key: 'id'
         },
+        unique: true,
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,

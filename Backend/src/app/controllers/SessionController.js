@@ -21,15 +21,27 @@ class SessionController {
 
     if (!user) {
       return res.status(500).json({
-        message: 'Usuário não encontrado.'
+        message: 'Usuário não encontrado'
       });
     }
 
     if (!(await user.checkPassword(password))) {
       return res.status(500).json({
-        message: 'Senha não confere.'
+        message: 'Senha não confere'
       });
     }
+    
+    const userLogged = await User.findOne({
+      include:[{
+        association : 'people',
+        required : true,
+        attributes : ['role'],
+      }],
+      where:{
+        id: user.people_id
+      } 
+    });
+    
 
     return res.json({
       jwt: jwt.sign({
@@ -38,6 +50,7 @@ class SessionController {
       }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       }),
+      role: userLogged.people.role
     });
   }
 

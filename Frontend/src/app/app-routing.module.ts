@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { RegisterPropertyComponent } from './components/register-property/register-property.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
@@ -14,9 +15,7 @@ const routes: Routes = [
   { path: 'register-property', canActivate: [AuthGuardService], component: RegisterPropertyComponent },
   {
     path: 'dashboard',
-    canActivate: [AuthGuardService],
-    loadChildren: () => import('./components/dashboard/dashboard.module')
-      .then((m) => m.DashboardModule),
+    canActivate: [AuthGuardService],component : DashboardComponent
   },
   { path: '**', redirectTo: 'login' },
 ];

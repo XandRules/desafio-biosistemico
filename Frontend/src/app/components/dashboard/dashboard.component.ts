@@ -1,12 +1,13 @@
 
-import { Component, Inject, NgZone, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 // amCharts imports
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import { any } from '@amcharts/amcharts4/.internal/core/utils/Array';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/resources/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,10 +15,30 @@ import { any } from '@amcharts/amcharts4/.internal/core/utils/Array';
   styleUrls: ['./dashboard.component.css']
 })
 
-export class DashboardComponent {
-  private chart!: am4charts.XYChart;
+export class DashboardComponent implements OnInit{
 
-  constructor(@Inject(PLATFORM_ID) private platformId, private zone: NgZone) { }
+  public data : any
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId, 
+    private zone: NgZone,
+    private httpClient: HttpClient,
+    private authService: AuthService) { }
+
+
+  ngOnInit(): void {
+    console.log('Dashboard')   
+
+    console.log(this.authService.role);
+
+    this.httpClient.get('http://localhost:3333/dashboard').subscribe((data)=> {
+      
+      this.barGraph(data);
+    });   
+
+  }
+
+  private chart!: am4charts.XYChart;  
 
   // Run the function only in the browser
   browserOnly(f: () => void) {
@@ -28,76 +49,54 @@ export class DashboardComponent {
     }
   }
 
-  ngAfterViewInit() {
-    // Chart code goes in here
-    this.browserOnly(() => {
-      am4core.useTheme(am4themes_animated);
+  barGraph(dado){
 
-      let chart = am4core.create("chartdiv", am4charts.PieChart);
+    console.log('dado',dado);
 
-      let pieSeries = chart.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "litres";
-      pieSeries.dataFields.category = "country";
+    var chart = am4core.create("chartdiv", am4charts.XYChart);
 
-      // Let's cut a hole in our Pie chart the size of 30% the radius
-      chart.innerRadius = am4core.percent(30);
+    chart.data = dado;
 
-      // Put a thick white border around each Slice
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
-      pieSeries.slices.template
-        // change the cursor on hover to make it apparent the object can be interacted with
-        .cursorOverStyle = [
-          {
-            "property": "cursor",
-            "value": "pointer"
-          }
-        ];
+    chart.padding(40, 40, 40, 40);
 
-      pieSeries.alignLabels = false;
-      pieSeries.labels.template.bent = true;
-      pieSeries.labels.template.radius = 3;
-      pieSeries.labels.template.padding(0, 0, 0, 0);
+    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = 'Perfil';
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 30;
+    categoryAxis.renderer.labels.template.horizontalCenter = "right";
+    categoryAxis.renderer.labels.template.verticalCenter = "middle";
+    categoryAxis.renderer.labels.template.rotation = 270;
+    categoryAxis.tooltip!.disabled = true;
+    categoryAxis.renderer.minHeight = 110;
 
-      pieSeries.ticks.template.disabled = true;
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.min = 0;
+    valueAxis.extraMax = 0.1;
+    //valueAxis.rangeChangeEasing = am4core.ease.linear;
+    //valueAxis.rangeChangeDuration = 1500;
 
-      // Create a base filter effect (as if it's not there) for the hover to return to
-      let shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
-      shadow.opacity = 0;
+    var series = chart.series.push(new am4charts.ColumnSeries());
+    series.dataFields.categoryX = 'Perfil';
+    series.dataFields.valueY = "Total";
+    series.tooltipText = "{valueY.value}"
+    series.columns.template.strokeOpacity = 0;
+    series.columns.template.column.cornerRadiusTopRight = 10;
+    series.columns.template.column.cornerRadiusTopLeft = 10;
 
-      // Create hover state
-      let hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+    var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+    labelBullet.label.verticalCenter = "bottom";
+    labelBullet.label.dy = -10;
+    labelBullet.label.text = "{values.valueY.workingValue.formatNumber('#.')}";
+    series.tooltip!.pointerOrientation = "horizontal";
 
-      // Slightly shift the shadow and make it more prominent on hover
-      let hoverShadow = hoverState!.filters.push(new am4core.DropShadowFilter);
-      hoverShadow.opacity = 0.7;
-      hoverShadow.blur = 5;
+    chart.zoomOutButton.disabled = true;
 
-      // Add a legend
-      chart.legend = new am4charts.Legend();
-
-      chart.data = [{
-        "country": "Lithuania",
-        "litres": 501.9
-      }, {
-        "country": "Germany",
-        "litres": 165.8
-      }, {
-        "country": "Australia",
-        "litres": 139.9
-      }, {
-        "country": "Austria",
-        "litres": 128.3
-      }, {
-        "country": "UK",
-        "litres": 99
-      }, {
-        "country": "Belgium",
-        "litres": 60
-      }];
-
+    // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+    series.columns.template.adapter.add("fill", function (fill, target) {
+    return chart.colors.getIndex(target.dataItem!.index);
     });
+
+    categoryAxis.sortBySeries = series;
   }
 
   ngOnDestroy() {

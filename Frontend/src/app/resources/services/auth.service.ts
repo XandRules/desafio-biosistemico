@@ -21,4 +21,8 @@ export class AuthService {
     return Boolean(this.isLogged())
   }
 
+  public get role() : string{
+    return localStorage.getItem('role')!;
+  }
+
 }

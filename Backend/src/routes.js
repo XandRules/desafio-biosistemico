@@ -4,6 +4,7 @@ import PeopleController from "./app/controllers/PeopleController";
 import PropertyController from "./app/controllers/PropertyController";
 import UserController from "./app/controllers/UserController";
 import SessionController from "./app/controllers/SessionController";
+import DashboardController from "./app/controllers/DashboardController";
 
 
 import authMiddleware from "./app/middlewares/auth";
@@ -24,5 +25,6 @@ routes.post("/user", UserController.store);
 routes.get("/people", PeopleController.index);
 routes.get("/property", PropertyController.index);
 routes.get("/user", UserController.index);
+routes.get("/dashboard", DashboardController.index);
 
 export default routes;
