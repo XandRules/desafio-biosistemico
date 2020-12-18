@@ -6,23 +6,25 @@ class PropertyController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),           
-      people_id: Yup.number().required(),
+      cpf: Yup.string().required(),
 
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.json('Validation fail');
+      return res.status(500).json('Validation fail');
     }
+
+    console.log('REQQQQQ',req.body)
 
     const PropertyExists = await Property.findOne({
       where: {
-        login: req.body.login
+        name: req.body.name
       },
     });
 
     if (PropertyExists) {
-      return res.json({
-        error: 'Property already exists.'
+      return res.status(500).json({
+        message: 'Property already exists.'
       });
     }
 
@@ -32,8 +34,8 @@ class PropertyController {
       console.log(req.body);
       newProperty = await Property.create(req.body);
     } catch (error) {
-      return res.json({
-        error: error.name
+      return res.status(500).json({
+        message: error.name
       });
     }
 

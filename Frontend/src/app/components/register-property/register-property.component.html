@@ -8,16 +8,18 @@
 
       <mat-card-content>
         <mat-form-field class="example-full-width">
-          <input type="text" matInput placeholder="CPF do proprietário">
+          <input type="text" matInput placeholder="CPF do proprietário"
+          [(ngModel)]="registerProperty.cpf" name="cpf">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input type="text" matInput placeholder="Nome da propriedade">
+          <input type="text" matInput placeholder="Nome da propriedade"
+          [(ngModel)]="registerProperty.name" name="name">
         </mat-form-field>
 
       </mat-card-content>
 
-      <button mat-stroked-button color="primary" class="btn-block">Cadastrar</button>
+      <button mat-stroked-button color="primary" class="btn-block" (click)="registerNewProperty()">Cadastrar</button>
 
     </form>
   </mat-card>
